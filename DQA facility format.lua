@@ -1,6 +1,7 @@
+-- Should copy and past from line 4 --
 let
-    Source = Excel.Workbook(File.Contents("C:\Users\GEORGE OMONDI\Desktop\GitHub\Homabay-DQA-project\RCH DQA.xlsx"), null, true),
-   #"Score for pbix_Sheet" = Source{[Item="Score for pbix",Kind="Sheet"]}[Data],
+    Source = Excel.Workbook(File.Contents("C:\Users\GEORGE OMONDI\Desktop\GitHub\Homabay-DQA-project\Facility folder\Rachuonyo North\Wagwe.xlsx"), null, true),
+    #"Score for pbix_Sheet" = Source{[Item="Score for pbix",Kind="Sheet"]}[Data],
     #"Changed Type" = Table.TransformColumnTypes(#"Score for pbix_Sheet",{{"Column1", type text}, {"Column2", type text}, {"Column3", type text}, {"Column4", type text}, {"Column5", type text}, {"Column6", type text}}),
     #"Promoted Headers" = Table.PromoteHeaders(#"Changed Type", [PromoteAllScalars=true]),
     #"Changed Type1" = Table.TransformColumnTypes(#"Promoted Headers",{{"Service", type text}, {"Indicators", type text}, {"Comparison", type text}, {"Oct-23", Int64.Type}, {"Nov-23", Int64.Type}, {"Dec-23", Int64.Type}}),
@@ -12,7 +13,9 @@ let
     #"Changed Type3" = Table.TransformColumnTypes(#"Added Custom",{{"Date", type date}}),
     #"Removed Columns" = Table.RemoveColumns(#"Changed Type3",{"Date.1", "Date.2"}),
     #"Reordered Columns" = Table.ReorderColumns(#"Removed Columns",{"Date", "Service", "Indicators", "Comparison", "Score"}),
-    #"Added Conditional Column" = Table.AddColumn(#"Reordered Columns", "Facility", each if [Indicators] <> "" then "Rachuonyo DH" else null),
-    #"Reordered Columns1" = Table.ReorderColumns(#"Added Conditional Column",{"Date", "Facility", "Service", "Indicators", "Comparison", "Score"})
+    #"Added Conditional Column" = Table.AddColumn(#"Reordered Columns", "Facility", each if [Indicators] <> "" then "WAGWE" else null),
+    #"Reordered Columns1" = Table.ReorderColumns(#"Added Conditional Column",{"Date", "Facility", "Service", "Indicators", "Comparison", "Score"}),
+    #"Added Conditional Column1" = Table.AddColumn(#"Reordered Columns1", "Subcounty", each if [Indicators] <> "" then "RACHUONYO NORTH" else null),
+    #"Reordered Columns2" = Table.ReorderColumns(#"Added Conditional Column1",{"Date", "Subcounty", "Facility", "Service", "Indicators", "Comparison", "Score"})
 in
-    #"Reordered Columns1"
+    #"Reordered Columns2"
